@@ -304,10 +304,15 @@ typedef  CPU_INT32U                 CPU_SR;                     /* Defines   CPU
 #else
 #define  CPU_SR_ALLOC()
 #endif
+
+#ifdef CPU_CFG_INT_DISABLE_KA_INT
+#define  CPU_INT_DIS()         do { cpu_sr = CPU_SR_Save_noKA(); } while (0) /* Save    CPU status word & disable interrupts.*/
+#define  CPU_INT_EN()          do { CPU_SR_Restore_noKA(cpu_sr); } while (0) /* Restore CPU status word.                     */
+#else
                                                                 /* Save CPU current BASEPRI priority lvl for exception. */
 #define  CPU_INT_DIS()         do { cpu_sr = CPU_SR_Save(CPU_CFG_KA_IPL_BOUNDARY << (8u - CPU_CFG_NVIC_PRIO_BITS));} while (0)
 #define  CPU_INT_EN()          do { CPU_SR_Restore(cpu_sr); } while (0) /* Restore CPU BASEPRI priority level.          */
-
+#endif
 
 #ifdef   CPU_CFG_INT_DIS_MEAS_EN
                                                                         /* Disable interrupts, ...                      */
@@ -396,6 +401,10 @@ void        CPU_IntSrcPrioSet(CPU_INT08U  pos,
 
 CPU_SR      CPU_SR_Save      (CPU_SR      new_basepri);
 void        CPU_SR_Restore   (CPU_SR      cpu_sr);
+
+
+CPU_SR      CPU_SR_Save_noKA      (void);
+void        CPU_SR_Restore_noKA   (CPU_SR      cpu_sr);
 
 
 void        CPU_WaitForInt   (void);

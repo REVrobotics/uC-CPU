@@ -36,6 +36,9 @@
         .global  CPU_SR_Save
         .global  CPU_SR_Restore
 
+        .global  CPU_SR_Save_noKA
+        .global  CPU_SR_Restore_noKA
+
         .global  CPU_WaitForInt
         .global  CPU_WaitForExcept
 
@@ -136,6 +139,16 @@ CPU_SR_Restore:
         CPSIE   I
         BX      LR
 
+.thumb_func
+CPU_SR_Save_noKA:
+        MRS     R0, PRIMASK                     @ Set prio int mask to mask all (except faults)
+        CPSID   I
+        BX      LR
+
+.thumb_func
+CPU_SR_Restore_noKA:
+        MSR     PRIMASK, R0
+        BX      LR
 
 @********************************************************************************************************
 @                                         WAIT FOR INTERRUPT

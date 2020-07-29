@@ -197,6 +197,20 @@
 
 #define  CPU_CFG_CACHE_MGMT_EN            DEF_DISABLED          /* Defines CPU data    word-memory order (see Note #1). */
 
+/*
+*********************************************************************************************************
+*                                      KERNEL AWARE DISABLE
+*
+* Note(s) : (1) The Kernel Aware feature changes the CPU_CRITICAL_ENTER() methods specific to the Cortex-M
+                port to use the Cortex-M BASEPRI register to mask non-Kernel Aware interrupt. This may not be
+				necessary for certain applications. Setting this flag will change back to using 
+				the PRIMASK bit instead (disable all interrupts).
+*********************************************************************************************************
+*/
+
+#if 0
+#define  CPU_CFG_INT_DISABLE_KA_INT
+#endif
 
 /*
 *********************************************************************************************************
